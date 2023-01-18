@@ -1,14 +1,16 @@
 package com.zerobase.dividend.persist.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.zerobase.dividend.model.Company;
+import lombok.*;
 
+import javax.annotation.security.DenyAll;
 import javax.persistence.*;
 
 @Getter
 @ToString
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity(name="COMPANY")
 public class CompanyEntity {
 
@@ -20,4 +22,11 @@ public class CompanyEntity {
 
     @Column(unique = true)
     private String ticker;
+
+    public static CompanyEntity of(Company company) {
+        return CompanyEntity.builder()
+                .name(company.getName())
+                .ticker(company.getTicker())
+                .build();
+    }
 }
