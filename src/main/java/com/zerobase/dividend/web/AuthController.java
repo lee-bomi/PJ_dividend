@@ -30,11 +30,13 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@RequestBody Auth.SingIn request) {
+
         //id, pw인증
         MemberEntity member = memberService.authenticate(request);
         //토큰생성
         String token = this.tokenProvider.generateToken(member.getUsername(), member.getRoles());
 
+        log.info("user login -> " + request.getUsername());
         return ResponseEntity.ok(token);
     }
 
