@@ -1,5 +1,6 @@
 package com.zerobase.dividend.service;
 
+import com.zerobase.dividend.exception.impl.NoCompanyException;
 import com.zerobase.dividend.model.Company;
 import com.zerobase.dividend.model.ScrapedResult;
 import com.zerobase.dividend.persist.CompanyRepository;
@@ -79,5 +80,17 @@ public class CompanyService {
         return companyEntities.stream()
                 .map(e -> e.getName())
                 .collect(Collectors.toList());
+    }
+
+    public String deleteCompany(String ticker) {
+
+        CompanyEntity companyEntity = companyRepository.findByTicker(ticker)
+                .orElseThrow(() -> new NoCompanyException());
+
+        this.dividendRepository.deleteAllByCompanyId(companyEntity.getId());
+        companyRepository.delete(companyEntity);
+
+        deleteAutoCompleteKeyword(companyEntity.getName());
+        return companyEntity.getName();
     }
 }
